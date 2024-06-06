@@ -6,14 +6,17 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     $tasks = Task::all();
-    // dd($tasks[0]->description);
-
     return view('task', ['tasks' => $tasks] );
     
 });
 
-Route::post('/', function (){
+//Update task
+Route::get('/{id}', function ($id){
+    $task = Task::find($id);
+    return view('update', ['task' => $task] );
+});
 
+Route::post('/', function (){
     Task::create([
         'title'=> request('title'),
         'description' => request('description'),
@@ -30,4 +33,11 @@ Route::delete('/{id}', function ($id){
     return view('task', ['tasks' => $tasks] );
 });
 
-// Route::put('/', 'task');
+Route::patch('/{id}', function ($id){
+    $task = Task::findOrFail($id);
+    $task->title = request('title');
+    $task->description = request('description');
+    $task->priority = request('priority');
+    $task->save();
+    return redirect('/');
+});
