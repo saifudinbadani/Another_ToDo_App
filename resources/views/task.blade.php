@@ -5,50 +5,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/app.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>To-Do App</title>
 </head>
 
 <body>
-    <h1>Another To Do App</h1>
-    @foreach($tasks as $task)
-    <div class="task-container">
-        <span>{{ $task->title }}</span>
-        <span>{{ $task->description }}</span>
-        <span>{{ $task->priority }}</span>
-        <span>{{ $task->isItDone }}</span>
-        <input type="checkbox">
-        <form method="GET" action='/{{$task->id}}' class="hidden">
-            @csrf
-            <button type="submit" class="edit-btn" >Edit</button>
-        </form>
-        
-        <form method="POST" action='/{{$task->id}}' class="hidden">
-            @csrf
-            @method('DELETE')
-            <button type="submit">Delete</button>
-        </form>
+    <h1 class="text-center text-3xl font-semibold mb-4">Another To Do App</h1>
+    <div class="box-border p-4 border-4 flex flex-col gap-y-1">
+        <div class="flex flex-row gap-x-2">
+            <span class="w-20 px-px">Title</span>
+            <span class="w-32 px-px">Description</span>
+            <span class="w-20 px-px">Priority</span>
+            <span class="w-20 px-px">Completed</span>
+        </div>
+
+        @foreach($tasks as $task)
+        <div class="container flex flex-row gap-x-2">
+            <span class="w-20 px-px">{{ $task->title }}</span>
+            <span class="w-32 px-px">{{ $task->description }}</span>
+            <span class="w-20 px-px">{{ $task->priority }}</span>
+            <input type="checkbox" class="w-20 px-px mr-10">
+            <form method="GET" action='/{{$task->id}}'>
+                @csrf
+                <button type="submit" class="edit-btn hover:underline">Edit</button>
+            </form>
+    
+            <form method="POST" action='/{{$task->id}}'>
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="rounded bg-red-600 text-white px-1.5">Delete</button>
+            </form>
+        </div>
+        @endforeach
     </div>
-    @endforeach 
-     
-    <form id='add-task'method="POST" action="/" id="add-form"> 
+
+    <form class='box-border p-4 border-4 mt-3' method="POST" action="/" id="add-form">
         @csrf
-        <input type="text" name="title" placeholder="title"></input>
-        <input type="text" name="description" placeholder="description"></input>
-        <select id="priority" name="priority">
+
+        <input class="rounded-md border-2 px-px mx-2" type="text" name="title" placeholder="title"></input>
+
+        <input class="rounded-md border-2 px-px mx-2" type="text" name="description" placeholder="description"></input>
+
+        <select class="rounded-md border-2 px-px mx-2" id="priority" name="priority">
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
         </select>
-        <button type="submit">Add</button>
+        <button type="submit" class="rounded-md bg-indigo-600 px-1.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add</button>
     </form>
 
     <form action="/{{$task->id}}" method="POST" id="update-form" hidden>
         @csrf
         @method('PATCH')
-        <input type="text" name="title" value="{{$task->title}}"></input>
-        <input type="text" name="description" value="{{$task->description}}"></input>
+        <p class="block text-2xl">Update</p>
+        <input class="rounded-md border-2 px-px mx-2" type="text" name="title" value="{{$task->title}}"></input>
+        <input class="rounded-md border-2 px-px mx-2" type="text" name="description" value="{{$task->description}}"></input>
         {{-- show the priority value from database as default selected and show other twos in option --}}
-        <select id="priority" name="priority" >
+        <select class="rounded-md border-2 px-px mx-2" id="priority" name="priority">
             @if ($task->priority === 'high')
             <option value="low">Low</option>
             <option value="medium">Medium</option>
@@ -61,12 +74,12 @@
             <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
-            @endif  
+            @endif
         </select>
-        <button type="submit">Update</button>
-        <a href="/" id="cancel-btn">Cancel</a>
+        <button type="submit" class="rounded-md bg-indigo-600 px-1.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Update</button>
+        <a href="/" id="cancel-btn" class="hover:underline">Cancel</a>
     </form>
-   
+
     <br>
 </body>
 <script>
@@ -99,4 +112,5 @@
 
 
 </script>
+
 </html>
