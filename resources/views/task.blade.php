@@ -41,6 +41,31 @@
         </select>
         <button type="submit">Add</button>
     </form>
+
+    <form action="/{{$task->id}}" method="POST" id="update-form" hidden>
+        @csrf
+        @method('PATCH')
+        <input type="text" name="title" value="{{$task->title}}"></input>
+        <input type="text" name="description" value="{{$task->description}}"></input>
+        {{-- show the priority value from database as default selected and show other twos in option --}}
+        <select id="priority" name="priority" >
+            @if ($task->priority === 'high')
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high" selected>High</option>
+            @elseif ($task->priority === 'medium')
+            <option value="low">Low</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High</option>
+            @else
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            @endif  
+        </select>
+        <button type="submit">Update</button>
+        <a href="/" id="cancel-btn">Cancel</a>
+    </form>
    
     <br>
 </body>
@@ -51,7 +76,8 @@
     addForm = document.getElementById('add-form');
 
     for (let i = 0; i < editBtns.length; i++) {
-     editBtns[i].addEventListener("click", function() {
+     editBtns[i].addEventListener("click", function(e) {
+        e.preventDefault();
         if(updateForm.style.display = 'none'){
             console.log('here..')
             updateForm.style.display = 'block'

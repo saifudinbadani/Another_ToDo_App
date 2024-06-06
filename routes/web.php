@@ -13,7 +13,7 @@ Route::get('/', function () {
 //Update task
 Route::get('/{id}', function ($id){
     $task = Task::find($id);
-    return view('update', ['task' => $task] );
+    return back();
 });
 
 Route::post('/', function (){
