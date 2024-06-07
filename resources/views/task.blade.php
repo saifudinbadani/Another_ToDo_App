@@ -25,17 +25,43 @@
             <span class="w-32 px-px">{{ $task->description }}</span>
             <span class="w-20 px-px">{{ $task->priority }}</span>
             <input type="checkbox" class="w-20 px-px mr-10">
-            <form method="GET" action='/{{$task->id}}'>
-                @csrf
-                <button type="submit" class="edit-btn hover:underline">Edit</button>
-            </form>
-    
+            <button type="submit" class="edit-btn hover:underline" data-task-id="{{ $task->id }}">Edit</button>
+
             <form method="POST" action='/{{$task->id}}'>
                 @csrf
                 @method('DELETE')
                 <button type="submit" class="rounded bg-red-600 text-white px-1.5">Delete</button>
             </form>
         </div>
+
+        <!-- Update form for each task, uniquely identified -->
+        <form action="/{{$task->id}}" method="POST" id="update-form-{{$task->id}}" hidden>
+            @csrf
+            @method('PATCH')
+            <p class="block text-xl">Update task</p>
+            <input class="rounded-md border-2 px-px mx-2" type="text" name="title" value="{{$task->title}}"></input>
+            <input class="rounded-md border-2 px-px mx-2" type="text" name="description"
+                value="{{$task->description}}"></input>
+            {{-- show the priority value from database as default selected and show other twos in option --}}
+            <select class="rounded-md border-2 px-px mx-2" id="priority" name="priority">
+                @if ($task->priority === 'high')
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high" selected>High</option>
+                @elseif ($task->priority === 'medium')
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                @else
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                @endif
+            </select>
+            <button type="submit"
+                class="rounded-md bg-indigo-600 px-1.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Update</button>
+             <a href="#" class="hover:underline cancel-btn" data-task-id="{{ $task->id }}">Cancel</a>
+        </form>
         @endforeach
     </div>
 
@@ -51,63 +77,54 @@
             <option value="medium">Medium</option>
             <option value="high">High</option>
         </select>
-        <button type="submit" class="rounded-md bg-indigo-600 px-1.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add</button>
-    </form>
-
-    <form action="/{{$task->id}}" method="POST" id="update-form" hidden>
-        @csrf
-        @method('PATCH')
-        <p class="block text-2xl">Update</p>
-        <input class="rounded-md border-2 px-px mx-2" type="text" name="title" value="{{$task->title}}"></input>
-        <input class="rounded-md border-2 px-px mx-2" type="text" name="description" value="{{$task->description}}"></input>
-        {{-- show the priority value from database as default selected and show other twos in option --}}
-        <select class="rounded-md border-2 px-px mx-2" id="priority" name="priority">
-            @if ($task->priority === 'high')
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high" selected>High</option>
-            @elseif ($task->priority === 'medium')
-            <option value="low">Low</option>
-            <option value="medium" selected>Medium</option>
-            <option value="high">High</option>
-            @else
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-            @endif
-        </select>
-        <button type="submit" class="rounded-md bg-indigo-600 px-1.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Update</button>
-        <a href="/" id="cancel-btn" class="hover:underline">Cancel</a>
+        <button type="submit"
+            class="rounded-md bg-indigo-600 px-1.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add</button>
     </form>
 
     <br>
 </body>
 <script>
-    editBtns = document.querySelectorAll('.edit-btn');
-    cancelBtn = document.getElementById('cancel-btn');
-    updateForm = document.getElementById('update-form');
-    addForm = document.getElementById('add-form');
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener("click", function() {
+        const taskId = btn.getAttribute('data-task-id');
+        const form = document.getElementById(`update-form-${taskId}`);
+        form.style.display = 'block';
+    });
+});
 
-    for (let i = 0; i < editBtns.length; i++) {
-     editBtns[i].addEventListener("click", function(e) {
-        e.preventDefault();
-        if(updateForm.style.display = 'none'){
-            console.log('here..')
-            updateForm.style.display = 'block'
-        }else{
-            updateForm.style.display = 'none'
-        }
-     });
+document.querySelectorAll('.cancel-btn').forEach(btn => {
+    btn.addEventListener("click", function() {
+        const taskId = btn.getAttribute('data-task-id');
+        const form = document.getElementById(`update-form-${taskId}`);
+        form.style.display = 'none';
+    });
+});
+//     editBtns = document.querySelectorAll('.edit-btn');
+//     cancelBtn = document.getElementById('cancel-btn');
+//     updateForm = document.getElementById('update-form');
+//     addForm = document.getElementById('add-form');
 
-    cancelBtn.addEventListener('click', function (){
-        if(updateForm.style.display = 'block'){
-            console.log('here..')
-            updateForm.style.display = 'none'
-        }else{
-            updateForm.style.display = 'block'
-        }
-    }) 
- }
+//     for (let i = 0; i < editBtns.length; i++) {
+//      editBtns[i].addEventListener("click", function(e) {
+//         e.preventDefault();
+//         // console.log(editBtns[i].dataset.id);
+//         if(updateForm.style.display = 'none'){
+//             // console.log('here..')
+//             updateForm.style.display = 'block'
+//         }else{
+//             updateForm.style.display = 'none'
+//         }
+//      });
+
+//     cancelBtn.addEventListener('click', function (){
+//         if(updateForm.style.display = 'block'){
+//             console.log('here..')
+//             updateForm.style.display = 'none'
+//         }else{
+//             updateForm.style.display = 'block'
+//         }
+//     }) 
+//  }
    
 
 

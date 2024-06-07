@@ -10,19 +10,12 @@ Route::get('/', function () {
     
 });
 
-//Update task
-Route::get('/{id}', function ($id){
-    $task = Task::find($id);
-    return back();
-});
-
 Route::post('/', function (){
     Task::create([
         'title'=> request('title'),
         'description' => request('description'),
         'priority' => request('priority')
     ]);
-
     $tasks = Task::all();
     return view('task', ['tasks' => $tasks] );
 });
