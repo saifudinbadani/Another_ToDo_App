@@ -69,9 +69,13 @@
         @csrf
 
         <input class="rounded-md border-2 px-px mx-2" type="text" name="title" placeholder="title"></input>
-
+        @error('title')
+            <p class="inline text-xs text-red-500 semibold">{{$message}}</p>
+        @enderror
         <input class="rounded-md border-2 px-px mx-2" type="text" name="description" placeholder="description"></input>
-
+        @error('description')
+            <p class="inline text-xs text-red-500 semibold">{{$message}}</p>
+        @enderror
         <select class="rounded-md border-2 px-px mx-2" id="priority" name="priority">
             <option value="low">Low</option>
             <option value="medium">Medium</option>

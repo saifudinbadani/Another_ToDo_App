@@ -2,7 +2,7 @@
 
 use App\Models\Task;
 use Illuminate\Support\Facades\Route;
-
+use Symfony\Contracts\Service\Attribute\Required;
 
 Route::get('/', function () {
     $tasks = Task::all();
@@ -11,6 +11,12 @@ Route::get('/', function () {
 });
 
 Route::post('/', function (){
+    request()->validate([
+        'title' => ['required', 'max:20'],
+        'description' => ['required', 'max:20'],
+        'priority' => ['required'],
+    ]);
+
     Task::create([
         'title'=> request('title'),
         'description' => request('description'),
@@ -22,8 +28,7 @@ Route::post('/', function (){
 
 Route::delete('/{id}', function ($id){
     Task::findOrFail($id)->delete();
-    $tasks = Task::all();
-    return view('task', ['tasks' => $tasks] );
+    return redirect('/');
 });
 
 Route::patch('/{id}', function ($id){
