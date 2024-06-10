@@ -32,6 +32,11 @@ Route::delete('/{id}', function ($id){
 });
 
 Route::patch('/{id}', function ($id){
+    request()->validate([
+        'title' => ['required', 'max:20'],
+        'description' => ['required', 'max:20'],
+        'priority' => ['required'],
+    ]);
     $task = Task::findOrFail($id);
     $task->title = request('title');
     $task->description = request('description');
