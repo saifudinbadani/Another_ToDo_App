@@ -1,46 +1,13 @@
 <?php
 
 use App\Models\Task;
+use App\Http\Controllers\TaskController;
 use Illuminate\Support\Facades\Route;
 use Symfony\Contracts\Service\Attribute\Required;
 
-Route::get('/', function () {
-    $tasks = Task::all();
-    return view('task', ['tasks' => $tasks] );
-    
-});
+Route::get('/', [TaskController::class, 'viewTasks']);
 
-Route::post('/', function (){
-    request()->validate([
-        'title' => ['required', 'max:20'],
-        'description' => ['required', 'max:20'],
-        'priority' => ['required'],
-    ]);
+Route::post('/', [TaskController::class, 'createTask']);
 
-    Task::create([
-        'title'=> request('title'),
-        'description' => request('description'),
-        'priority' => request('priority')
-    ]);
-    $tasks = Task::all();
-    return view('task', ['tasks' => $tasks] );
-});
-
-Route::delete('/{id}', function ($id){
-    Task::findOrFail($id)->delete();
-    return redirect('/');
-});
-
-Route::patch('/{id}', function ($id){
-    request()->validate([
-        'title' => ['required', 'max:20'],
-        'description' => ['required', 'max:20'],
-        'priority' => ['required'],
-    ]);
-    $task = Task::findOrFail($id);
-    $task->title = request('title');
-    $task->description = request('description');
-    $task->priority = request('priority');
-    $task->save();
-    return redirect('/');
-});
+Route::patch('/{id}',[TaskController::class, 'updateTask'] );
+Route::delete('/{id}',[TaskController::class, 'deleteTask'] );
