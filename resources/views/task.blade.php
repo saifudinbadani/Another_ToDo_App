@@ -40,8 +40,14 @@
             @method('PATCH')
             <p class="block text-xl">Update task</p>
             <input class="rounded-md border-2 px-px mx-2" type="text" name="title" value="{{$task->title}}"></input>
+            @error('title')
+            <p class="inline text-xs text-red-500 semibold">{{$message}}</p>
+            @enderror
             <input class="rounded-md border-2 px-px mx-2" type="text" name="description"
                 value="{{$task->description}}"></input>
+            @error('description')
+            <p class="inline text-xs text-red-500 semibold">{{$message}}</p>
+            @enderror
             {{-- show the priority value from database as default selected and show other twos in option --}}
             <select class="rounded-md border-2 px-px mx-2" id="priority" name="priority">
                 @if ($task->priority === 'high')
@@ -60,7 +66,7 @@
             </select>
             <button type="submit"
                 class="rounded-md bg-indigo-600 px-1.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Update</button>
-             <a href="#" class="hover:underline cancel-btn" data-task-id="{{ $task->id }}">Cancel</a>
+            <a href="#" class="hover:underline cancel-btn" data-task-id="{{ $task->id }}">Cancel</a>
         </form>
         @endforeach
     </div>
@@ -70,11 +76,11 @@
 
         <input class="rounded-md border-2 px-px mx-2" type="text" name="title" placeholder="title"></input>
         @error('title')
-            <p class="inline text-xs text-red-500 semibold">{{$message}}</p>
+        <p class="inline text-xs text-red-500 semibold">{{$message}}</p>
         @enderror
         <input class="rounded-md border-2 px-px mx-2" type="text" name="description" placeholder="description"></input>
         @error('description')
-            <p class="inline text-xs text-red-500 semibold">{{$message}}</p>
+        <p class="inline text-xs text-red-500 semibold">{{$message}}</p>
         @enderror
         <select class="rounded-md border-2 px-px mx-2" id="priority" name="priority">
             <option value="low">Low</option>
